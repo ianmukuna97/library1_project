@@ -22,7 +22,9 @@ def books_borrowed(request):
 
 
 def books_fined(request):
-    return render(request,'books_fined.html')
+    transactions = Transactions.objects.all()
+    fines = [t for t in transactions if t.total_fine > 0]
+    return render(request, 'books_fined.html', {'fines': fines})
 
 
 def books_provided(request):
@@ -43,12 +45,12 @@ def distribute_book(request, id):
 
     return render(request, 'distribute.html', {'book' : book, 'learners' : learners})
 
-def return_book(request, id):
+def requite_book(request, id):
     transaction = get_object_or_404(Transactions, pk=id)
     transaction.return_date = date.today()
-    transaction.status = 'RETURNED'
+    transaction.status = 'REQUITED'
     transaction.save()
-    messages.success(request, f'Book {transaction.book.title} was returned')
+    messages.success(request, f'Book {transaction.book.title} was requited')
     if transaction.total_fine > 0:
         messages.warning(request, f'Book {transaction.book.title} has incurred a fine of Ksh.{transaction.total_fine}')
     return redirect('books_stored')

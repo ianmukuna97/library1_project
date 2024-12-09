@@ -26,6 +26,6 @@ urlpatterns = [
     path('books/fined', views.books_fined, name='books_fined'),
     path('books/provided', views.books_provided, name='books_provided'),
     path('distribute/<int:id>', views.distribute_book, name='distribute_book'),
-    path('return/<int:id>', views.return_book, name='return_book'),
+    path('requite/<int:id>', views.requite_book, name='requite_book'),
     path('admin/', admin.site.urls),
 ]
