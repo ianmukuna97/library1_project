@@ -38,19 +38,27 @@ def books_provided(request):
     return None
 
 
-def distribute_book(request, id,):
+def distribute_book(request, id):
     book = Book.objects.get(pk=id)
     learners = Learner.objects.all()
+
     if request.method == 'POST':
         learner_id = request.POST['learner_id']
-        learner: Learner = Learner.objects.get(pk=learner_id)
+        student: Learner = Learner.objects.get(pk=learner_id)  # Get the learner based on the ID
         expected_return_date = date.today() + timedelta(days=7)
-        transaction = Transactions.objects.create(book=book, learner=learner, expected_return_date=expected_return_date, status='DISTRIBUTED')
-        transaction.save()
-        messages.success(request, f'Book {book.title} was distributed')
-        return redirect('books_stored')
-    return render(request, 'distribute.html', {'book' : book, 'learners' : learners})
 
+        # Corrected this line to use 'student' instead of 'learner'
+        transactions = Transactions.objects.create(
+            book=book,
+            student=student,  # Use 'student' here
+            expected_return_date=expected_return_date,
+            status='DISTRIBUTED'
+        )
+
+        messages.success(request, f'Book {book.title} was distributed to {student.name}')
+        return redirect('books_stored')
+
+    return render(request, 'distribute.html', {'book': book, 'learners': learners})
 def return_book(request, id):
     transaction = get_object_or_404(Transactions, pk=id)
     transaction.return_date = date.today()
@@ -63,20 +71,20 @@ def return_book(request, id):
 
 
 def payment_overdue(request, id):
-    transactions = Transactions.objects.get(pk=id)
-    total = transactions.total_fine
-    phone = transactions.student.phone_number
-    cl = MpesaClient()
-    phone_number = '0723740215'
-    amount = 1
-    account_reference = transactions.student.adm_no
-    transaction_desc = 'Overdue Fines'
-    callback_url = 'https://mature-octopus-causal.ngrok-free.app/handle/payment'
-    response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-    if response.response_code == "0":
-        payment = Payment.objects.create(transaction=transaction, merchant_request_id=response.merchant_request_id, checkout_request_id=response.checkout_request_id, amount=amount)
-        payment.save()
-        messages.success(request, f"Payment was requested successfully")
+    # transactions = Transactions.objects.get(pk=id)
+    # total = transactions.total_fine
+    # phone = transactions.student.phone
+    # cl = MpesaClient()
+    # phone_number = '0723740215'
+    # amount = 1
+    # account_reference = transactions.student.adm_no
+    # transaction_desc = 'Overdue Fines'
+    # callback_url = 'https://mature-octopus-causal.ngrok-free.app/handle/payment'
+    # response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+    # if response.response_code == "0":
+    #     payment = Payment.objects.create(transaction=transaction, merchant_request_id=response.merchant_request_id, checkout_request_id=response.checkout_request_id, amount=amount)
+    #     payment.save()
+    #     messages.success(request, f"Payment was requested successfully")
     return redirect('books_fined')
 
 

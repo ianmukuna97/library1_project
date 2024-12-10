@@ -36,13 +36,22 @@ class Book(models.Model):
 
 
 class Transactions(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)  # all transactions related to a book will be deleted
+    STATUS_CHOICES = [
+        ('borrowed', 'Borrowed'),
+        ('returned', 'Returned'),
+        ('lost', 'Lost'),
+    ]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     student = models.ForeignKey(Learner, on_delete=models.CASCADE, related_name='transactions')
-    status = models.CharField(max_length=20)  # borrowed, returned, lost
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     expected_return_date = models.DateField()
-    return_date = models.DateField(null=True)
+    return_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.student} borrowed {self.book} on {self.created_at.strftime('%Y-%m-%d')}"
 
 
     @property
