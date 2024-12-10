@@ -1,9 +1,73 @@
 {% extends 'master.html' %}
+{% load static %}
 
 {% block title %}
-   <title>Books Fined</title>
+    <title>Books Fined</title>
+{% endblock %}
+
+{% block more_css %}
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">'
 {% endblock %}
 
 {% block content %}
-	Navigate to books fined.
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Books Fined</h1>
+    <p class="mb-4">Books Fined</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Learners that have incurred fines on books borrowed</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Learner</th>
+                        <th>Book</th>
+                        <th>Adm No</th>
+                        <th>Fine Amt</th>
+                        <th>Overdue</th>
+                        <th>Payment</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                       <th>Learner</th>
+                        <th>Book</th>
+                        <th>Adm No</th>
+                        <th>Fine Amt</th>
+                        <th>Overdue</th>
+                        <th>Payment</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    {% for transaction in fines %}
+                        <tr>
+                            <td>{{ transaction.student.name }}</td>
+                            <td>{{ transaction.book.title }}</td>
+                            <td>{{ transaction.student.adm_no }}</td>
+                            <td>{{ transaction.total_fine }}</td>
+                            <td>{{ transaction.days_overdue }}</td>
+                            <td>
+                                <a href="{% url 'payment_overdue' transaction.id %}" class="btn btn-outline-primary btn-sm">Payment</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block more_js %}
+    {#      <!-- Page level plugins -->#}
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 {% endblock %}

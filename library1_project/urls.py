@@ -26,6 +26,11 @@ urlpatterns = [
     path('books/fined', views.books_fined, name='books_fined'),
     path('books/provided', views.books_provided, name='books_provided'),
     path('distribute/<int:id>', views.distribute_book, name='distribute_book'),
-    path('requite/<int:id>', views.requite_book, name='requite_book'),
+    path('return/<int:id>', views.return_book, name='return_book'),
+    path('payment/<int:id>', views.payment_overdue, name='payment_overdue'),
+    path('handle/payment', views.callback, name='callback'),
+    path('pie-chart', views.pie_chart, name='pie_chart'),
+    path('line-chart', views.line_chart, name='line_chart'),
+    path('bar_chart', views.bar_chart, name='bar_chart'),
     path('admin/', admin.site.urls),
 ]

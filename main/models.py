@@ -52,6 +52,14 @@ class Transactions(models.Model):
          return amount
        return 0
 
+    @property
+    def days_overdue(self):
+        if self.return_date and self.expected_return_date and self.return_date > self.expected_return_date:
+            days = (self.return_date - self.expected_return_date).days
+            return days
+        return 0
+
+
 
     class Meta:
         verbose_name = 'Transaction'
