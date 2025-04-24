@@ -80,13 +80,13 @@ WSGI_APPLICATION = 'library1_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {dj_database_url.config(conn_max_age=600, ssl_require=True)
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'library1_db',
-        # 'USER': 'root',
-        # 'PASSWORD': '',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
+    'default':{
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'library1_db',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
